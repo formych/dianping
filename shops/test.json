@@ -1,0 +1,52 @@
+{
+	"id": "500018",
+	"name": "Va Bene华万意意大利餐厅",
+	"img": "http://qcloud.dpfile.com/pc/tNiGHPEn-8ACh02ETyWomYXBkvUhxbGLfSp7_IXVDLvzrC8Y-b3mDZCktYnLeqgctOnd3gXQdDYlAqlaVaAFeZ0rYYyiRo_EhzufqWWjTjs.jpg",
+	"comments": "670",
+	"avePrice": "人均：437元",
+	"province": "上海",
+	"city": "上海",
+	"location": "新天地",
+	"address": "太仓路181弄新天地北里7号楼2楼(近马当路)",
+	"cuisine": "西餐",
+	"status": "正常"
+},
+{
+	"id": "500000",
+	"name": "阿凡提大���店",
+	"img": "http://p1.meituan.net/apiback/c84136c4658abe3f5fb2843dca71d479112030.jpg%40120w_90h_1e_1c_1l_80q%7Cwatermark%3D1%26%26r%3D1%26p%3D9%26x%3D2%26y%3D2%26relative%3D1%26o%3D20",
+	"comments": "724",
+	"avePrice": "人均：75元",
+	"province": "上海",
+	"city": "上海",
+	"location": "曲阳地区",
+	"address": "曲阳路775号天山宾馆B1楼",
+	"cuisine": "新疆菜",
+	"status": "正常"
+},
+{
+	"id": "500002",
+	"name": "逸���上海蟹道餐厅",
+	"img": "",
+	"comments": "1",
+	"avePrice": "人均：-",
+	"province": "上海",
+	"city": "上海",
+	"location": "打浦桥",
+	"address": "丽园路1030号(徐家汇路口)",
+	"cuisine": "本帮江浙菜",
+	"status": "暂停收录"
+},
+{
+	"id": "500004",
+	"name": "30年代",
+	"img": "",
+	"comments": "29",
+	"avePrice": "人均：-",
+	"province": "上海",
+	"city": "上���",
+	"location": "南京西路",
+	"address": "南阳路132号波特曼后门(近西康路)",
+	"cuisine": "本帮江浙菜",
+	"status": "暂停收录"
+}
