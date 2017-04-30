@@ -80,18 +80,26 @@ function getShops(path) {
           return;
         }
         let ids = $('link[rel="canonical"]').attr('href').split('/'),
-          status = '正常';
+          status = '正常',
+	  province = '',
+	  city = '';
         if ($('.shop-closed').length) {
           status = '暂停收录';
         }
+	if ( $('meta[name="location"]').length) {
+		province =  $('meta[name="location"]').attr('content').split(';')[0].split('=')[1];
+	}
+	if ($('meta[name="location"]').length) {
+		city = $('meta[name="location"]').attr('content').split(';')[1].split('=')[1];
+	}
         let shop = {
           id: ids[ids.length - 1],
           name: $('meta[itemprop="name"]').attr('content'),
           img: $('meta[itemprop="image"]').attr('content'),
           comments: $('#reviewCount').text().replace(/(条评论)/g, ""),
           avePrice: $('#avgPriceTitle').text(),
-          province: $('meta[name="location"]').attr('content').split(';')[0].split('=')[1],         
-          city: $('meta[name="location"]').attr('content').split(';')[1].split('=')[1],
+          province: province,         
+          city: city,
           //location: $('.breadcrumb a')[1].children[0].data.trim(),
           address: $('.expand-info.address .item').text().trim(),
           //cuisine: $('.breadcrumb a')[2].children[0].data.trim(),
