@@ -92,9 +92,8 @@ function getShopsByCategory(options) {
         fs.writeFile(outputFile, string, {flag: 'a'}, () => {
         });    		
     	});
-     	res.on("error", () => {
-        console.log('GET error');
-      });
+    })on("error", () => {
+      console.log('GET error');
     });
   } catch (e) {
   } finally {

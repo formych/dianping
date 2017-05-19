@@ -23,9 +23,9 @@ getAllShopComments();
 //获取批量商户的评论
 function getAllShopComments() {
   let shops = '[' + fs.readFileSync("./shops/4-26.json", 'utf-8') + ']';
-  console.log('条数' + '\t次数\t' + 'times');
+  console.log('条数' + '\t次数\t' + '时间');
   JSON.parse(shops).forEach((item, i) => {
-    if (item.id < 500058 ||item.comments <= 0 || item.status == '暂停收录') {
+    if (item.comments <= 0 || item.status == '暂停收录') {
       return;
     }
     if (start == 0) {
@@ -108,10 +108,9 @@ function getComments(flag, path, outputFile) {
       fs.writeFile(outputFile.toString(), string, {flag: 'a'}, () => {
       });
             
-    });
-    res.on("error", () => {
-      console.log('GET error');
     });  
+  }).on("error", () => {
+    console.log('GET error');
   });
 }
 

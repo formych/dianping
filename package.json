@@ -1,13 +1,23 @@
 {
   "name": "dianping",
-  "version": "1.0.0",
-  "main": "getComments.js",
-  "dependencies": {},
+  "version": "0.0.2",
+  "main": "",
+  "dependencies": {
+    "cheerio": "^0.22.0"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "本程序仅仅是用来解决如下大致需求：\r \t1.获取大众点评的商家评论信息\r \t2.验证大众点评的商家ID起止点",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/formych/dianping.git"
+  },
+  "bugs": {
+    "url": "https://github.com/formych/dianping/issues"
+  },
+  "homepage": "https://github.com/formych/dianping#readme"
 }

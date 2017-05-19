@@ -22,10 +22,6 @@ initShopRange(503489, 600000);
 //options.path = '/shop/500002';
 //getShops(options);
 
-setTimeout(() => {
-
-});
-
 //批量获取商户信息
 function initShopRange(start, end) {
     for (let i = start; i <= end; i++) {
@@ -81,17 +77,17 @@ function getShops(path) {
         }
         let ids = $('link[rel="canonical"]').attr('href').split('/'),
           status = '正常',
-	  province = '',
-	  city = '';
+          province = '',
+          city = '';
         if ($('.shop-closed').length) {
           status = '暂停收录';
         }
-	if ( $('meta[name="location"]').length) {
-		province =  $('meta[name="location"]').attr('content').split(';')[0].split('=')[1];
-	}
-	if ($('meta[name="location"]').length) {
-		city = $('meta[name="location"]').attr('content').split(';')[1].split('=')[1];
-	}
+      	if ( $('meta[name="location"]').length) {
+      		province =  $('meta[name="location"]').attr('content').split(';')[0].split('=')[1];
+      	}
+      	if ($('meta[name="location"]').length) {
+      		city = $('meta[name="location"]').attr('content').split(';')[1].split('=')[1];
+      	}
         let shop = {
           id: ids[ids.length - 1],
           name: $('meta[itemprop="name"]').attr('content'),
@@ -116,9 +112,8 @@ function getShops(path) {
         fs.writeFile(outputFile, string, {flag: 'a'}, () => {
         });    		
     	});
-     	res.on("error", () => {
-        console.log('GET error');
-      });
+    }).on("error", () => {
+      console.log('GET error');
     });
   } catch (e) {
   } finally {
