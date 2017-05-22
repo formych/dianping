@@ -52,7 +52,7 @@ ID目前有效范围
 
 	获取具体的商家所有评论getComments.js
 		准备:
-			1.在商家的信息正常执行完，会在shops下生成对应的商家json文件, 对该文件做去除非法评论数目里的汉字，"comments": "0"这个字段(详见错误处理的第二条)
+			1.在商家的信息正常执行完，会在shops下生成对应的商家json文件, 对该文件做去除非法评论数目里的汉字，"comments": "0条评���",(详见错误处理的第二条, 替换为"comments": "0")
 			2.修改getComments.js里面的
 			let shops = '[' + fs.readFileSync("./shops/4-26.json", 'utf-8') + ']';
 			将4-26.json修改为对应的商家json文件
