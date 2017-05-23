@@ -10,7 +10,7 @@ tag：v0.1介绍：
 	这个版本主要采用setTimeout来控制异步获取的时间间隔，getAllShops中最开始是2s->4s, getComments中的2s, 休息(3 - 2) * 页面数量
 
 master分支:
-	目前getAllShops采用async来控制并发, 具体结果有待测试
+	目前getAllShops和getComments都已采用async来控制并发, 具体结果有待测试
 
 
 ID目前有效范围
