@@ -62,10 +62,12 @@ function getShops(path, callback) {
       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
     }
   };
+  
   options.path = path;
   let delay = parseInt((Math.random() * 10000000) % 2000, 10);
   concurrencyCount++;
   console.log(path);
+
   https.get(options, (res) => {
     if (res.statusCode !== 200) {
       console.log('状态码：', res.statusCode + '\t' + options.path);

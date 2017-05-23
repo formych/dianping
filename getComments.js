@@ -1,5 +1,6 @@
 const https = require('https'),
 	fs = require('fs'),
+  async = require('async'),
 	cheerio = require('cheerio');
 
 String.prototype.trim = function() {
@@ -9,43 +10,36 @@ String.prototype.trim = function() {
 }
 
 var outputFilePath = __dirname + '/comments/',
-  waitTime = 0,
-start = 0; 
-
+  concurrencyCount = 0;
 
 console.log('Start time(getNews): ' + new Date().toLocaleString());
 getAllShopComments();
 
-//这个是获取单个商户的评论数据
-// let path = '/shop/21171398/review_more?pageno='
-// getComments(true, path);
-
 //获取批量商户的评论
 function getAllShopComments() {
   let shops = '[' + fs.readFileSync("./shops/4-26.json", 'utf-8') + ']';
-  console.log('条数' + '\t次数\t' + '时间');
+  let paths = []; 
   JSON.parse(shops).forEach((item, i) => {
     if (item.comments <= 0 || item.status == '暂停收录') {
       return;
     }
-    if (start == 0) {
-      waitTime = 0;
-    } else {
-      waitTime += Math.ceil(item.comments / 20);      
-    }
-    start++;    
-    console.log(i + '\t' + start + '\t' + waitTime);
-    
-    setTimeout(() => {
-      let flag = true,
-        path = '/shop/' + item.id + '/review_more?pageno=';
-      getComments(flag, path);
-    }, waitTime * 3000 + 10);          
+    let times = Math.ceil(item.comments / 20);  
+    for (let i = 1; i <= times; i++) {
+      let path = '/shop/' + item.id + '/review_more?pageno=' + i;
+      paths.push(path);
+    }   
   })
+  async.mapLimit(paths, 5, function (path, callback) {
+    getComments(path, callback);
+  }, function (err, result) {
+    //console.log(err)
+    //console.log('final:');
+    //console.log(result);
+  });
 }
 
 //具体的每次请求和获取一家商户的评论
-function getComments(flag, path, outputFile) {
+function getComments(path, callback) {
   let options = {};
   options = {
     hostname: 'www.dianping.com',
@@ -65,12 +59,12 @@ function getComments(flag, path, outputFile) {
       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
     }
   };
-  if (flag) {
-    options.path = path + 1;
-  } else {
-    options.path = path;
-  }
+
+  let delay = parseInt((Math.random() * 10000000) % 2000, 10);
+  concurrencyCount++;
+  options.path = path;
   console.log(options.path);
+
   https.get(options, (res) => {
     let data = '',
       string = '';
@@ -93,18 +87,7 @@ function getComments(flag, path, outputFile) {
         }      
       });
 
-      if (flag) {
-        flag = false;
-        let pageEnd = $('.Pages .Pages a').last().prev().text();
-        outputFile = outputFilePath + $('.revitew-title a').text() + '.txt';
-        if (pageEnd) {
-          for (let i = 2; i <= pageEnd; i++) {
-            setTimeout(() => {
-              getComments(flag, path + i, outputFile);
-            }, (i - 1) * 2000);
-          }
-        }        
-      }      
+      outputFile = outputFilePath + $('.revitew-title a').text() + '.txt';      
       fs.writeFile(outputFile.toString(), string, {flag: 'a'}, () => {
       });
             
@@ -112,6 +95,10 @@ function getComments(flag, path, outputFile) {
   }).on("error", () => {
     console.log('GET error');
   });
+  setTimeout(function () {
+    concurrencyCount--;
+    callback(null, path);
+  }, delay);
 }
 
 process.on('exit',	() => {
