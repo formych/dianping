@@ -1,5 +1,6 @@
 const https = require('https'),
 	fs = require('fs'),
+  async = require('async'),
 	cheerio = require('cheerio');
 
 String.prototype.trim = function() {
@@ -11,6 +12,7 @@ String.prototype.trim = function() {
 
 var flag = true, //判断是否第一次请求
 	outputFilePath = __dirname + '/shops/',
+  concurrencyCount = 0,
   now = new Date(), 
   outputFile = outputFilePath + (now.getMonth() + 1) + '-' + now.getDate() + '.json',
   path = '/shop/';
@@ -18,23 +20,27 @@ var flag = true, //判断是否第一次请求
 console.log('Start time(getNews): ' + new Date().toLocaleString());
 
 //main
-initShopRange(503489, 600000);
+initShopRange(1700000, 1700010);
 //options.path = '/shop/500002';
 //getShops(options);
 
 //批量获取商户信息
 function initShopRange(start, end) {
-    for (let i = start; i <= end; i++) {
-      setTimeout(() => {
-        let path = '/shop/' + i;
-        getShops(path);
-        console.log(i);
-      }, (i - start) * 4000);
-    }  
+  let paths = [];
+  for (let i = start; i <= end; i++) {
+    paths.push('/shop/' + i);
+  }
+  async.mapLimit(paths, 5, function (path, callback) {
+    getShops(path, callback);
+  }, function (err, result) {
+    //console.log(err)
+    //console.log('final:');
+    //console.log(result);
+  }); 
 }
 
 //获取单个商户信息
-function getShops(path) {
+function getShops(path, callback) {
 	let string = '',
     shopName = '',
     options = '';
@@ -57,67 +63,69 @@ function getShops(path) {
     }
   };
   options.path = path;
-  try {
-		https.get(options, (res) => {
-      if (res.statusCode !== 200) {
-        console.log('状态码：', res.statusCode + '\t' + options.path);
-        return;
-      } 
-      let data = '';
-      res.on('data', (chunk) => {
-          data += chunk;
-      });
-      res.on("end", () => {
-	    	let $ = cheerio.load(data),          
-					$title = $('title');                  
-
-        //判断商户是否存在 
-        if ($title.text().indexOf('404') != -1) {
-          return;
-        }
-        let ids = $('link[rel="canonical"]').attr('href').split('/'),
-          status = '正常',
-          province = '',
-          city = '';
-        if ($('.shop-closed').length) {
-          status = '暂停收录';
-        }
-      	if ( $('meta[name="location"]').length) {
-      		province =  $('meta[name="location"]').attr('content').split(';')[0].split('=')[1];
-      	}
-      	if ($('meta[name="location"]').length) {
-      		city = $('meta[name="location"]').attr('content').split(';')[1].split('=')[1];
-      	}
-        let shop = {
-          id: ids[ids.length - 1],
-          name: $('meta[itemprop="name"]').attr('content'),
-          img: $('meta[itemprop="image"]').attr('content'),
-          comments: $('#reviewCount').text().replace(/(条评论)/g, ""),
-          avePrice: $('#avgPriceTitle').text(),
-          province: province,         
-          city: city,
-          //location: $('.breadcrumb a')[1].children[0].data.trim(),
-          address: $('.expand-info.address .item').text().trim(),
-          //cuisine: $('.breadcrumb a')[2].children[0].data.trim(),
-          status: status
-        }          
-    
-        if (flag) {          
-          string += JSON.stringify(shop, null, '\t');
-          flag = false;          
-        } else {
-          string += ',\n' + JSON.stringify(shop, null, '\t');
-        }
-
-        fs.writeFile(outputFile, string, {flag: 'a'}, () => {
-        });    		
-    	});
-    }).on("error", () => {
-      console.log('GET error');
+  let delay = parseInt((Math.random() * 10000000) % 2000, 10);
+  concurrencyCount++;
+  console.log(path);
+  https.get(options, (res) => {
+    if (res.statusCode !== 200) {
+      console.log('状态码：', res.statusCode + '\t' + options.path);
+      return;
+    } 
+    let data = '';
+    res.on('data', (chunk) => {
+        data += chunk;
     });
-  } catch (e) {
-  } finally {
-  }
+    res.on("end", () => {
+      let $ = cheerio.load(data),          
+        $title = $('title');
+      //判断商户是否存在 
+      if ($title.text().indexOf('404') != -1) {
+        return;
+      }
+      let ids = $('link[rel="canonical"]').attr('href').split('/'),
+        status = '正常',
+        province = '',
+        city = '';
+      if ($('.shop-closed').length) {
+        status = '暂停收录';
+      }
+      if ( $('meta[name="location"]').length) {
+        province =  $('meta[name="location"]').attr('content').split(';')[0].split('=')[1];
+      }
+      if ($('meta[name="location"]').length) {
+        city = $('meta[name="location"]').attr('content').split(';')[1].split('=')[1];
+      }
+      let shop = {
+        id: ids[ids.length - 1],
+        name: $('meta[itemprop="name"]').attr('content'),
+        img: $('meta[itemprop="image"]').attr('content'),
+        comments: $('#reviewCount').text().replace(/(条评论)/g, ""),
+        avePrice: $('#avgPriceTitle').text(),
+        province: province,         
+        city: city,
+        //location: $('.breadcrumb a')[1].children[0].data.trim(),
+        address: $('.expand-info.address .item').text().trim(),
+        //cuisine: $('.breadcrumb a')[2].children[0].data.trim(),
+        status: status
+      }          
+  
+      if (flag) {          
+        string += JSON.stringify(shop, null, '\t');
+        flag = false;          
+      } else {
+        string += ',\n' + JSON.stringify(shop, null, '\t');
+      }
+
+      fs.writeFile(outputFile, string, {flag: 'a'}, () => {
+      });       
+    });
+  }).on("error", () => {
+    console.log('GET error');
+  });
+  setTimeout(function () {
+    concurrencyCount--;
+    callback(null, path);
+  }, delay);
 }
 
 process.on('exit',	() => {

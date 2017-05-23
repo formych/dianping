@@ -3,6 +3,7 @@
   "version": "0.0.2",
   "main": "",
   "dependencies": {
+    "async": "^2.4.1",
     "cheerio": "^0.22.0"
   },
   "devDependencies": {},
