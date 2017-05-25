@@ -17,10 +17,10 @@ getAllShopComments();
 
 //获取批量商户的评论
 function getAllShopComments() {
-  let shops = '[' + fs.readFileSync("./shops/4-26.json", 'utf-8') + ']';
+  let shops = '[' + fs.readFileSync("./shops/4-30.json", 'utf-8') + ']';
   let paths = []; 
   JSON.parse(shops).forEach((item, i) => {
-    if (item.comments <= 0 || item.status == '暂停收录') {
+    if (item.id <= 566006 || item.comments <= 0 || item.status == '暂停收录') {
       return;
     }
     let times = Math.ceil(item.comments / 20);  
@@ -29,7 +29,7 @@ function getAllShopComments() {
       paths.push(path);
     }   
   })
-  async.mapLimit(paths, 5, function (path, callback) {
+  async.mapLimit(paths, 2, function (path, callback) {
     getComments(path, callback);
   }, function (err, result) {
     //console.log(err)
@@ -52,11 +52,11 @@ function getComments(path, callback) {
       "Accept-Language": "zh-CN,zh;q=0.8,en;q=0.6",
       "Cache-Control": "max-age=0",
       "Connection": "keep-alive",
-      "Cookie": "td_cookie=18446744071615745163; navCtgScroll=0; navCtgScroll=200; _hc.v=9595fa20-9f43-ae2d-1335-5e4c3f501552.1492066193; __utma=205923334.947511846.1493103322.1493103322.1493103322.1; __utmc=205923334; __utmz=205923334.1493103322.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); td_cookie=18446744071615537927; PHOENIX_ID=0a01084a-15ba3e56373-1621df7; __mta=43245338.1493103998106.1493107595836.1493113069705.3; .asck=EEC0A45D2B7542F1E6D2589DC83BD8E2; s_ViewType=10; JSESSIONID=0905884F3CBA739E62912B4DC2C567FA; aburl=1; cy=2; cye=beijing;Path=/;Domain=.dianping.com;Expires=Wed, 25-Apr-2018 02:44:31 GMT;=",
+      "Cookie": "_hc.v=9595fa20-9f43-ae2d-1335-5e4c3f501552.1492066193; td_cookie=18446744070343997594; Hm_lvt_dbeeb675516927da776beeb1d9802bd4=1495617630; m_flash2=1; cityid=2; PHOENIX_ID=0a017918-15c3d23aee5-11da89d6; __mta=244783802.1495617482821.1495619319609.1495674372643.6; __utma=1.96008998.1495615976.1495615976.1495675229.2; __utmc=1; __utmz=1.1495675229.2.2.utmcsr=developer.dianping.com|utmccn=(referral)|utmcmd=referral|utmcct=/; pvhistory=\"6L+U5ZuePjo8L3Nob3AvNTAwMDAwL3Jldmlld19tb3JlPjo8MTQ5NTY3ODMwNjc5OF1fWw==\"; midasclick=; default_ab=shop%3AA%3A1%7Cshopreviewlist%3AA%3A1; JSESSIONID=4DC8EC440579DF0343BC7DE3624C8B91; aburl=1; cy=1; cye=shanghai",
       "Host": "www.dianping.com",     
-      "Referer": "https://www.dianping.com/shop/21171398/review_more",
+      "Referer": "https://www.dianping.com",
       "Upgrade-Insecure-Requests": 1,
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
     }
   };
 

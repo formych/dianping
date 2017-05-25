@@ -20,7 +20,7 @@ var flag = true, //判断是否第一次请求
 console.log('Start time(getNews): ' + new Date().toLocaleString());
 
 //main
-initShopRange(1700000, 1700010);
+initShopRange(1882055, 1900000);
 //options.path = '/shop/500002';
 //getShops(options);
 
@@ -30,7 +30,7 @@ function initShopRange(start, end) {
   for (let i = start; i <= end; i++) {
     paths.push('/shop/' + i);
   }
-  async.mapLimit(paths, 5, function (path, callback) {
+  async.mapLimit(paths, 2, function (path, callback) {
     getShops(path, callback);
   }, function (err, result) {
     //console.log(err)
