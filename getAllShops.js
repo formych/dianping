@@ -30,7 +30,7 @@ function initShopRange(start, end) {
   for (let i = start; i <= end; i++) {
     paths.push('/shop/' + i);
   }
-  async.mapLimit(paths, 2, function (path, callback) {
+  async.mapLimit(paths, 1, function (path, callback) {
     getShops(path, callback);
   }, function (err, result) {
     //console.log(err)
@@ -64,7 +64,7 @@ function getShops(path, callback) {
   };
   
   options.path = path;
-  let delay = parseInt((Math.random() * 10000000) % 2000, 10);
+  let delay = parseInt((Math.random() * 10000000) % 3000, 10);
   concurrencyCount++;
   console.log(path);
 
